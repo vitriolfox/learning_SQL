@@ -39,6 +39,32 @@ LOCK TABLES `authors` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `book_instances`
+--
+
+DROP TABLE IF EXISTS `book_instances`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `book_instances` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `book_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `book_id` (`book_id`),
+  CONSTRAINT `book_instances_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `book_instances`
+--
+
+LOCK TABLES `book_instances` WRITE;
+/*!40000 ALTER TABLE `book_instances` DISABLE KEYS */;
+INSERT INTO `book_instances` VALUES (1,3);
+/*!40000 ALTER TABLE `book_instances` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `books`
 --
 
@@ -79,12 +105,22 @@ DROP TABLE IF EXISTS `borrowed_books`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `borrowed_books` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `book_id` int(11) DEFAULT NULL,
+  `book_instance_id` int(11) DEFAULT NULL,
   `visitor_id` int(11) DEFAULT NULL,
   `borrowed_at` date DEFAULT NULL,
   `expire_at` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `employee_gaveout_id` int(11) DEFAULT NULL,
+  `employee_returned_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `book_instance_id` (`book_instance_id`),
+  KEY `employee_gaveout_id` (`employee_gaveout_id`),
+  KEY `employee_returned_by_id` (`employee_returned_by_id`),
+  KEY `visitor_id` (`visitor_id`),
+  CONSTRAINT `borrowed_books_ibfk_1` FOREIGN KEY (`book_instance_id`) REFERENCES `book_instances` (`id`),
+  CONSTRAINT `borrowed_books_ibfk_2` FOREIGN KEY (`employee_gaveout_id`) REFERENCES `enployees` (`id`),
+  CONSTRAINT `borrowed_books_ibfk_3` FOREIGN KEY (`employee_returned_by_id`) REFERENCES `enployees` (`id`),
+  CONSTRAINT `borrowed_books_ibfk_4` FOREIGN KEY (`visitor_id`) REFERENCES `visitors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,6 +129,7 @@ CREATE TABLE `borrowed_books` (
 
 LOCK TABLES `borrowed_books` WRITE;
 /*!40000 ALTER TABLE `borrowed_books` DISABLE KEYS */;
+INSERT INTO `borrowed_books` VALUES (1,1,1,'2017-11-23','2017-11-30',1,1);
 /*!40000 ALTER TABLE `borrowed_books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +172,7 @@ CREATE TABLE `enployees` (
   `position` varchar(50) DEFAULT NULL,
   `active` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,6 +181,7 @@ CREATE TABLE `enployees` (
 
 LOCK TABLES `enployees` WRITE;
 /*!40000 ALTER TABLE `enployees` DISABLE KEYS */;
+INSERT INTO `enployees` VALUES (1,'Kakaliku','331555kk','Kakika',1);
 /*!40000 ALTER TABLE `enployees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +199,7 @@ CREATE TABLE `visitors` (
   `joined_at` date DEFAULT NULL,
   `expire_at` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,6 +208,7 @@ CREATE TABLE `visitors` (
 
 LOCK TABLES `visitors` WRITE;
 /*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
+INSERT INTO `visitors` VALUES (1,'Zsolti',331,'2017-06-19','2017-12-15');
 /*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -182,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-30 17:07:36
+-- Dump completed on 2017-11-02 17:21:47
